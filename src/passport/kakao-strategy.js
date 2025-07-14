@@ -7,6 +7,9 @@ module.exports = (passport) => {
     callbackURL: process.env.KAKAO_CALLBACK_URL
   },
   async (accessToken, refreshToken, profile, done) => {
+    console.log('--- Kakao Strategy Executed ---'); // 1. 전략 실행 확인용 로그
+    console.log('Kakao Profile:', profile); // 2. 카카오로부터 받은 프로필 정보 확인용 로그
+
     try {
       const existingUser = await User.findOne({ kakaoId: profile.id });
 
@@ -24,6 +27,7 @@ module.exports = (passport) => {
         return done(null, newUser);
       }
     } catch (err) {
+      console.error('--- Kakao Strategy Error ---', err); // 3. 에러 발생 시 강제로 콘솔에 출력
       return done(err);
     }
   }));
