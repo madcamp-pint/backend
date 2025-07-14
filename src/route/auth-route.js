@@ -14,7 +14,7 @@ router.get('/kakao/callback',
 );
 
 // 로그인된 사용자 정보 확인
-router.get('/me', (req, res) => {
+router.get('/user', (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'Not authenticated' });
   }

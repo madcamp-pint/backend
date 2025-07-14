@@ -1,17 +1,29 @@
-require('dotenv').config();
 const express = require('express');
-const passport = require('passport');
+const cors = require('cors');
 const session = require('express-session');
+const passport = require('passport');
+
+require('dotenv').config();
 
 const authRoute = require('./src/route/auth-route');
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+
 app.use(express.json());
 
 app.use(session({
   secret: 'secretKey',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false // 로컬에서는 false
+  }
 }));
 
 app.use(passport.initialize());
