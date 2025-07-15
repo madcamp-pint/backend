@@ -7,8 +7,12 @@ const session = require('express-session');
 const cors = require('cors'); // cors import
 
 const authRoute = require('./src/route/auth-route');
-const pintRoute = require('./src/route/pint-route'); // pintRoute 추가
-console.log('--- pint-route.js loaded ---'); // 파일 로드 확인 로그
+const pintRoute = require('./src/route/pint-route');          // 장소 기반 캡슐
+const timePintRoute = require('./src/route/time-pint-route'); // 시간 기반 캡슐
+
+// 파일 로드 확인 로그
+console.log('--- pint-route.js loaded ---');
+console.log('--- time-pint-route.js loaded ---');
 
 const app = express();
 
@@ -17,11 +21,12 @@ app.use('/uploads', express.static('uploads'));
 
 // CORS 미들웨어 설정
 app.use(cors({
-  origin: 'http://localhost:5173', // 5174 -> 5173으로 수정
+  origin: 'http://localhost:5173',
   credentials: true,
 }));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
   secret: 'secretKey',
@@ -52,6 +57,7 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/auth', authRoute);
-app.use('/api/pints', pintRoute); // 다시 원래 경로로 복구
+app.use('/api/pints', pintRoute);           // 장소 기반 캡슐
+app.use('/api/time-pints', timePintRoute);  // 시간 기반 캡슐
 
 module.exports = app;
