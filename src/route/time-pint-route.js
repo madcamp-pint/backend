@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { createTimePint } = require('../controller/time-pint-controller');
+const { createTimePint, getAllTimePints } = require('../controller/time-pint-controller');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// 파일 업로드 경로
-const uploadPath = path.join(__dirname, '../../uploads'); 
+// 업로드 경로 설정
+const uploadPath = path.join(__dirname, '../../uploads');
+if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
 
-// 파일 업로드 설정
+// multer 설정
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadPath),
   filename: (req, file, cb) => {
@@ -20,5 +21,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post('/', upload.single('media'), createTimePint);
+router.get('/', getAllTimePints);
 
 module.exports = router;
