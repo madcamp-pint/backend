@@ -3,6 +3,7 @@ const router = express.Router();
 const upload = require('../middleware/upload');
 const Pint = require('../model/pint-model');
 const isAuthenticated = require('../middleware/auth-middleware'); // 인증 미들웨어 불러오기
+const pintService = require('../service/pint-service');
 
 // POST a new pint
 router.post('/', isAuthenticated, upload.array('files', 10), async (req, res) => { // 미들웨어 추가
@@ -40,7 +41,7 @@ router.post('/', isAuthenticated, upload.array('files', 10), async (req, res) =>
     // Pint 모델 형식에 맞게 데이터 가공
     const newPint = new Pint({
       title: pintName,
-      author: req.user._id, // 'test_user' -> req.user._id 로 변경
+      creator: req.user._id, // 'test_user' -> req.user._id 로 변경
       location: {
         type: 'Point',
         coordinates: [longitude, latitude], // GeoJSON은 [경도, 위도] 순서
@@ -61,6 +62,13 @@ router.post('/', isAuthenticated, upload.array('files', 10), async (req, res) =>
     console.error('Error creating pint:', error);
     res.status(500).json({ message: error.message });
   }
+});
+
+// 내 핀트 불러오기
+router.get('/my', isAuthenticated, async (req, res) => {
+  const userId = req.user._id;
+  const myPints = await pintService.getUserPints(userId);
+  res.json(myPints);
 });
 
 module.exports = router; 

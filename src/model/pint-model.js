@@ -6,11 +6,7 @@ const pintSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  author: {
-    type: mongoose.Schema.Types.ObjectId, // String -> ObjectId
-    ref: 'User', // User 모델을 참조
-    required: true,
-  },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   // 위치 정보를 GeoJSON 형식으로 저장
   location: {
     type: {

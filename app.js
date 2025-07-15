@@ -57,6 +57,7 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/auth', authRoute);
+app.use('/pints', pintRoute);
 app.use('/api/pints', pintRoute);           // 장소 기반 캡슐
 app.use('/api/time-pints', timePintRoute);  // 시간 기반 캡슐
 
