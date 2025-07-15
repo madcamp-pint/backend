@@ -34,4 +34,12 @@ router.get('/logout', (req, res) => {
   });
 });
 
+router.get('/check-username', async (req, res) => {
+  const { UserName } = req.query;
+  if (!UserName) return res.json({ duplicate: false });
+  const exists = await User.findOne({ UserName });
+  res.json({ duplicate: !!exists });
+});
+
+
 module.exports = router;
