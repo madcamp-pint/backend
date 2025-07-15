@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   nickname: String,
   email: String,
   profileImage: String,
+  UserName: { type: String, unique: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
