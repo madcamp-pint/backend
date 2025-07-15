@@ -7,11 +7,7 @@ const isAuthenticated = require('../middleware/auth-middleware'); // 인증 미�
 // POST a new pint
 router.post('/', isAuthenticated, upload.array('files', 10), async (req, res) => { // 미들웨어 추가
   try {
-    console.log('Authenticated User:', req.user); // 로그인된 사용자 정보 로그
-    console.log('Received body:', req.body);
-    console.log('Received files:', req.files); // req.file -> req.files
-
-    // 프론트엔드에서 보낸 데이터 추출
+    // 프론트엔드에서 보낸 데이터 추출 (가장 먼저 선언)
     const {
       pintName, // title
       latitude,
@@ -23,6 +19,20 @@ router.post('/', isAuthenticated, upload.array('files', 10), async (req, res) =>
       caption,
       taggedUsers,
     } = req.body;
+
+    console.log('Authenticated User:', req.user); // 로그인된 사용자 정보 로그
+    console.log('프론트에서 받은 핀트 정보:', {
+      pintName,
+      latitude,
+      longitude,
+      address,
+      locationHint,
+      radius,
+      visibility,
+      caption,
+      taggedUsers,
+      files: req.files
+    });
 
     // 첫 번째 이미지만 사용 (혹은 이미지 배열 처리 로직 추가)
     const image = req.files && req.files.length > 0 ? req.files[0].path : null;
@@ -45,6 +55,7 @@ router.post('/', isAuthenticated, upload.array('files', 10), async (req, res) =>
     });
 
     const savedPint = await newPint.save();
+    console.log("저장 성공"); // ← 이 부분이 터미널에 출력됩니다.
     res.status(201).json(savedPint);
   } catch (error) {
     console.error('Error creating pint:', error);
