@@ -43,7 +43,8 @@ const pintSchema = new mongoose.Schema({
   },
   taggedUsers: { // JSON 문자열로 받으므로 일단 String으로 처리
     type: String,
-  }
+  },
+  taggedFriends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // 친구 태그 기능
 }, { timestamps: true });
 
 // GeoJSON 쿼리를 위한 인덱스 생성
