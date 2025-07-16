@@ -79,27 +79,32 @@ router.post('/add', isAuthenticated, async (req, res) => {
     console.log('친구 추가 시도');
     const userId = req.user._id;
     const { friendID } = req.body;
+    console.log('받은 friendID (userName):', friendID);
+
     if (!friendID) return res.status(400).json({ message: '친구 ID 필요' });
 
-    // 친구가 실제로 존재하는지 확인
-    const friend = await User.findById(friendID);
+    // friendID 는 userName 이므로, userName으로 유저 찾기
+    const friend = await User.findOne({ userName: friendID });
     if (!friend) return res.status(404).json({ message: '존재하지 않는 유저' });
 
-    // 이미 친구인지 확인
     const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: '유저를 찾을 수 없습니다.' });
+
     user.friends = user.friends || [];
-    if (user.friends.some(f => f.toString() === friendID)) {
+    if (user.friends.some(f => f.toString() === friend._id.toString())) {
       return res.status(400).json({ message: '이미 친구입니다.' });
     }
 
-    user.friends.push(friendID);
+    user.friends.push(friend._id);
     await user.save();
+
     res.json({ message: '친구 추가 성공' });
   } catch (err) {
     console.error('친구 추가 에러:', err);
     res.status(500).json({ message: '서버 에러', error: err.message });
   }
 });
+
 
 module.exports = router;
 ;
