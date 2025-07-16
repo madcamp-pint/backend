@@ -26,6 +26,9 @@ router.get('/user', (req, res) => {
     nickname: req.user.nickname,
     email: req.user.email,
     profileImage: req.user.profileImage,
+    introduction: req.user.introduction,
+    userName: req.user.userName,
+    link: req.user.link,
   });
 });
 
