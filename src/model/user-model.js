@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   userName: { type: String, unique: true },
   introduction: String,
   link: String,
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

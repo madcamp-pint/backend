@@ -75,24 +75,30 @@ router.get('/list', isAuthenticated, async (req, res) => {
 });
 
 router.post('/add', isAuthenticated, async (req, res) => {
-  const userId = req.user._id;
-  const { friendId } = req.body;
-  if (!friendId) return res.status(400).json({ message: '친구 ID 필요' });
+  try {
+    console.log('친구 추가 시도');
+    const userId = req.user._id;
+    const { friendID } = req.body;
+    if (!friendID) return res.status(400).json({ message: '친구 ID 필요' });
 
-  // 친구가 실제로 존재하는지 확인
-  const friend = await User.findById(friendId);
-  if (!friend) return res.status(404).json({ message: '존재하지 않는 유저' });
+    // 친구가 실제로 존재하는지 확인
+    const friend = await User.findById(friendID);
+    if (!friend) return res.status(404).json({ message: '존재하지 않는 유저' });
 
-  // 이미 친구인지 확인
-  const user = await User.findById(userId);
-  if (user.friends && user.friends.includes(friendId)) {
-    return res.status(400).json({ message: '이미 친구입니다.' });
+    // 이미 친구인지 확인
+    const user = await User.findById(userId);
+    user.friends = user.friends || [];
+    if (user.friends.some(f => f.toString() === friendID)) {
+      return res.status(400).json({ message: '이미 친구입니다.' });
+    }
+
+    user.friends.push(friendID);
+    await user.save();
+    res.json({ message: '친구 추가 성공' });
+  } catch (err) {
+    console.error('친구 추가 에러:', err);
+    res.status(500).json({ message: '서버 에러', error: err.message });
   }
-
-  user.friends = user.friends || [];
-  user.friends.push(friendId);
-  await user.save();
-  res.json({ message: '친구 추가 성공' });
 });
 
 module.exports = router;
