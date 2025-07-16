@@ -35,9 +35,9 @@ const pintSchema = new mongoose.Schema({
     enum: ['public', 'private'],
     default: 'public'
   },
-  image: { // 프론트에서는 'files'로 여러 개를 보낼 수 있지만, 여기서는 첫 번째만 저장
+  images: [{ // 여러 파일(이미지 등)을 저장할 수 있도록 배열로 변경
     type: String,
-  },
+  }],
   caption: {
     type: String,
   },

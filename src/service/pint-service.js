@@ -4,12 +4,12 @@ class PintService {
   async createPint(userId, pintData) {
     const dataToSave = {
       creator: userId,
-      pintName: pintData.pintName,
+      title: pintData.pintName,
       radius: pintData.radius,
       visibility: pintData.visibility,
       caption: pintData.caption,
       taggedUsers: pintData.taggedUsers,
-      files: pintData.files,
+      images: pintData.files,
       location: {
         type: 'Point',
         coordinates: [pintData.longitude, pintData.latitude],
